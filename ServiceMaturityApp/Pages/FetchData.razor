@@ -1,0 +1,70 @@
+﻿@page "/service"
+
+<PageTitle>Service Maturity</PageTitle>
+
+@using ServiceMaturityApp.Data
+@inject AuditService AuditService
+
+<h1>Service Maturity</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (app == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <FieldLabel>Name</FieldLabel>
+    <Field>
+        <TextEdit Placeholder="Enter Application Name" @bind-Text="@app.Name" />
+    </Field>
+    <FieldLabel>Owner</FieldLabel>
+    <Field>
+        <TextEdit Placeholder="Enter Owner" @bind-Text="@app.Owner.Name">
+            <FieldHelp>Please enter Domain which owns the application</FieldHelp>
+        </TextEdit> 
+    </Field>
+    <FieldLabel>Description</FieldLabel>
+    <Field>
+        <TextEdit Placeholder="Enter Description" @bind-Text="@app.Description">
+            <FieldHelp>Please enter short description of the application</FieldHelp>
+        </TextEdit>
+    </Field>
+    <Field>
+        <TextEdit Placeholder="Enter URL" @bind-Text="@app.Url">
+            <FieldHelp>lorem ipsum</FieldHelp>
+        </TextEdit>
+    </Field>
+    <Field>
+        <TextEdit Placeholder="Enter Repo" @bind-Text="@app.Repo">
+            <FieldHelp>lorem ipsum</FieldHelp>
+        </TextEdit>
+    </Field>
+    <Field>
+        <TextEdit Placeholder="Enter Framework/Version" @bind-Text="@app.FrameworkVersion">
+            <FieldHelp>lorem ipsum</FieldHelp>
+        </TextEdit>
+    </Field>
+    <Field>
+        <TextEdit Placeholder="Enter Language and Version" @bind-Text="@app.LanguageVersion">
+            <FieldHelp>lorem ipsum</FieldHelp>
+        </TextEdit>
+    </Field>
+    <Button Color="Color.Primary" Clicked="@OnButtonClicked">Next</Button>
+    }
+
+@code {
+    private Application app = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        app = await AuditService.GetApplicationInfoAsync(5);
+        app.Owner = app.Owner ?? new Domain();
+    }
+
+    private async Task OnButtonClicked()
+    {
+        await AuditService.SaveChanges(app);
+    }
+}
